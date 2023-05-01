@@ -24,14 +24,14 @@ classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
 
 
 class TestFileStorageDocs(unittest.TestCase):
-    """Tests to check the documentation and style of FileStorage class"""
+    """Tests to check the documentation and style of FileStorage class."""
     @classmethod
     def setUpClass(cls):
-        """Set up for the doc tests"""
+        """Set up for the doc tests // Unnitests."""
         cls.fs_f = inspect.getmembers(FileStorage, inspect.isfunction)
 
     def test_pep8_conformance_file_storage(self):
-        """Test that models/engine/file_storage.py conforms to PEP8."""
+        """Test that models/engine/file_storage.py conforms to PEP8 standard."""
         pep8s = pep8.StyleGuide(quiet=True)
         result = pep8s.check_files(['models/engine/file_storage.py'])
         self.assertEqual(result.total_errors, 0,
@@ -46,21 +46,21 @@ test_file_storage.py'])
                          "Found code style errors (and warnings).")
 
     def test_file_storage_module_docstring(self):
-        """Test for the file_storage.py module docstring"""
+        """Test for the file_storage.py module : docstring"""
         self.assertIsNot(file_storage.__doc__, None,
                          "file_storage.py needs a docstring")
         self.assertTrue(len(file_storage.__doc__) >= 1,
                         "file_storage.py needs a docstring")
 
     def test_file_storage_class_docstring(self):
-        """Test for the FileStorage class docstring"""
+        """Test for the FileStorage class : docstring"""
         self.assertIsNot(FileStorage.__doc__, None,
                          "FileStorage class needs a docstring")
         self.assertTrue(len(FileStorage.__doc__) >= 1,
                         "FileStorage class needs a docstring")
 
     def test_fs_func_docstrings(self):
-        """Test for the presence of docstrings in FileStorage methods"""
+        """Test for the - presence of docstrings in FileStorage methods"""
         for func in self.fs_f:
             self.assertIsNot(func[1].__doc__, None,
                              "{:s} method needs a docstring".format(func[0]))
@@ -113,3 +113,18 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+@unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Test that : get properly returns a requested object"""
+        storage = FileStorage()
+        user = User(name="User1")
+        user.save()
+        self.assertEqual(user, storage.get("User", user.id))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """Test that count : properly counts all objects"""
+        storage = FileStorage()
+        no_bjs = len(storage._FileStorage__objects)
+        self.assertEqual(nob_js, storage.count())
